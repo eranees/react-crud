@@ -3,21 +3,22 @@ import './App.css';
 import { studentData } from './data';
 import { Header } from './header';
 
-function App() {
-  const [data, setData] = useState([]);
+function Crud() {
+
+  const [data, setData] = useState([])
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [isUpdate, setUpdate] = useState(false);
 
   useEffect(() => {
-    setData(studentData);
-  }, []);
+    setData(studentData)
+  }, [])
 
   function handleDelete(id) {
-    if (window.confirm('Are you sure you want to delete?')) {
+    if (window.confirm('Are you sure you want to delete')) {
       const remainingStudents = data.filter((student) => student.id !== id);
-      setData(remainingStudents);
+      setData(remainingStudents)
     }
   }
 
@@ -49,10 +50,10 @@ function App() {
 
   function handleEdit(id) {
     setUpdate(true);
-    const student = data.find((std) => std.id === id);
-    setId(student.id);
-    setName(student.name);
-    setGender(student.gender); // Ensure gender is set correctly here
+    const student = data.filter((std) => std.id === id);
+    setId(student[0].id);
+    setName(student[0].name);
+    setGender(student[0].gender);
   }
 
   function handleUpdate(e) {
@@ -69,17 +70,19 @@ function App() {
     if (error.length > 0) {
       showToast(error.join(", "));
     } else {
+
       const updatedData = data.map((student) => {
         if (student.id === id) {
           return { ...student, name: name, gender: gender };
         }
         return student;
+
       });
 
       setData(updatedData);
-      setName('');
-      setGender('');
-      setId(0);
+      setName('')
+      setGender('')
+      setId(0)
       setUpdate(false);
     }
   }
@@ -87,7 +90,7 @@ function App() {
   function showToast(message) {
     const toastElement = document.getElementById('errorToast');
     const toast = new window.bootstrap.Toast(toastElement);
-    toastElement.querySelector('.toast-body').innerHTML = message;
+    toastElement.querySelector('.toast-body').textContent = message;
     toast.show();
   }
 
@@ -105,7 +108,7 @@ function App() {
         </div>
       </div>
       <div className="App container d-flex justify-content-between">
-        <div className="form">
+        <div className='form'>
           <form>
             <input type="hidden" id="id" value={id} onChange={(e) => setId(e.target.value)} />
             <div className="mb-3">
@@ -115,13 +118,13 @@ function App() {
 
             <div className="mb-3">
               <label htmlFor="gender" className="form-label">Gender</label>
-              <select className="form-select" id="gender" value={gender} onChange={(e) => setGender(e.target.value)} aria-describedby="gender">
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
+              <input type="text" className="form-control" id="gender" value={gender} onChange={(e) => setGender(e.target.value)} aria-describedby="gender" />
             </div>
-
+            {/* <select class="form-select" aria-label="Default select example">
+              <option selected>Gender</option>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+            </select> */}
             {
               !isUpdate ?
                 <button type="submit" className="btn btn-primary mt-2" onClick={(e) => handleSave(e)}>Save</button>
@@ -131,31 +134,30 @@ function App() {
           </form>
         </div>
 
-        <div className="student-data w-50">
-          <table className="table table-hover">
+        <div className='student-data w-50'>
+          <table className='table table-hover'>
             <thead>
-              <tr>
-                <th>SNo.</th>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Actions</th>
-              </tr>
+              <th>SNo.</th>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Gender</th>
             </thead>
             <tbody>
               {
-                data.map((student, index) => (
-                  <tr key={student.id}>
-                    <td>{index + 1}</td>
-                    <td>{student.id}</td>
-                    <td>{student.name}</td>
-                    <td>{student.gender}</td>
-                    <td>
-                      <button className="btn btn-sm btn-primary" onClick={() => handleEdit(student.id)}>Edit</button>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(student.id)}>Delete</button>
-                    </td>
-                  </tr>
-                ))
+                data.map((student, index) => {
+                  return (
+                    <tr key={index + 1}>
+                      <td>{index + 1}</td>
+                      <td>{student.id}</td>
+                      <td>{student.name}</td>
+                      <td>{student.gender}</td>
+                      <td>
+                        <button className='btn btn-sm bg-primary' onClick={() => handleEdit(student.id)}>Edit</button>
+                        <button className='btn btn-sm bg-danger' onClick={() => handleDelete(student.id)}>Delete</button>
+                      </td>
+                    </tr>
+                  )
+                })
               }
             </tbody>
           </table>
@@ -165,4 +167,4 @@ function App() {
   );
 }
 
-export default App;
+export default Crud;
